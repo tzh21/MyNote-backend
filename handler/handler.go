@@ -7,7 +7,7 @@ import (
 
 func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	// 注册
-	userHandler := NewUserHandler()
+	userHandler := NewUserHandler(db)
 	router.POST("/signup", userHandler.HandleSignup)
 
 	// 登录

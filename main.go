@@ -2,10 +2,14 @@ package main
 
 import (
 	"MyNote-backend/db"
+	"MyNote-backend/handler"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// 初始化数据库
 	db := db.InitDB()
-
+	r := gin.Default()
+	handler.SetupRoutes(r, db)
+	r.Run()
 }
