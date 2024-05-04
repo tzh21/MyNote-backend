@@ -1,3 +1,5 @@
+// TODO 密码加密传输
+
 package handler
 
 import (
@@ -29,7 +31,7 @@ func (h *UserHandler) HandleSignup(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 }
 
 func (h *UserHandler) HandleLogin(c *gin.Context) {
@@ -51,12 +53,23 @@ func (h *UserHandler) HandleLogin(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, foundUser)
+	c.JSON(http.StatusOK, gin.H{"message": "Login successful"})
 }
 
 func (h *UserHandler) HandleGetAllUsers(c *gin.Context) {
-	var users []model.User
-	if err := h.db.Find(&users).Error; err != nil {
+	// var users []model.User
+	// if err := h.db.Find(&users).Error; err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	return
+	// }
+
+	// c.JSON(http.StatusOK, users)
+	var users []struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	if err := h.db.Model(&model.User{}).Select("username, password").Find(&users).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
