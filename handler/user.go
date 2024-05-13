@@ -57,13 +57,6 @@ func (h *UserHandler) HandleLogin(c *gin.Context) {
 }
 
 func (h *UserHandler) HandleGetAllUsers(c *gin.Context) {
-	// var users []model.User
-	// if err := h.db.Find(&users).Error; err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	return
-	// }
-
-	// c.JSON(http.StatusOK, users)
 	var users []struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
