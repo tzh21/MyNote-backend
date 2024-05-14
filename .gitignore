@@ -21,3 +21,6 @@
 go.work
 
 .DS_Store
+
+# directory for restoring files
+files/
