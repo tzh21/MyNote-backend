@@ -60,18 +60,27 @@ func (h *FileHandler) HandleUpload(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
 }
 
+// rootDir 指的是用户目录
 func getAllFilePaths(rootDir string, username string) ([]string, error) {
 	var filePaths []string
 
-	files, err := os.ReadDir(rootDir)
+	// 分类文件夹
+	categorys, err := os.ReadDir(rootDir)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, file := range files {
-		if !file.IsDir() {
-			relPath := username + "/" + file.Name()
-			filePaths = append(filePaths, relPath)
+	for _, category := range categorys {
+		if category.IsDir() {
+			noteFiles, err := os.ReadDir(rootDir + "/" + category.Name())
+			if err != nil {
+				return nil, err
+			}
+
+			for _, file := range noteFiles {
+				relPath := username + "/" + category.Name() + "/" + file.Name()
+				filePaths = append(filePaths, relPath)
+			}
 		}
 	}
 
