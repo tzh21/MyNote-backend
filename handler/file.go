@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -64,25 +63,22 @@ func (h *FileHandler) HandleUpload(c *gin.Context) {
 func getAllFilePaths(rootDir string, username string) ([]string, error) {
 	var filePaths []string
 
-	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if !info.IsDir() {
-			relPath := username + "/" + strings.TrimPrefix(path, rootDir+"/")
-			filePaths = append(filePaths, relPath)
-		}
-		return nil
-	})
-
+	files, err := os.ReadDir(rootDir)
 	if err != nil {
 		return nil, err
+	}
+
+	for _, file := range files {
+		if !file.IsDir() {
+			relPath := username + "/" + file.Name()
+			filePaths = append(filePaths, relPath)
+		}
 	}
 
 	return filePaths, nil
 }
 
-// 返回用户所有文件组成的列表。客户端接收后根据表的内容逐个请求文件。
+// 返回用户所有笔记文件组成的列表。客户端接收后根据表的内容逐个请求笔记文件。
 func (h *FileHandler) HandleList(c *gin.Context) {
 	user := c.Param("user")
 
