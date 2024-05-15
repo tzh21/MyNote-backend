@@ -78,8 +78,10 @@ func getAllFilePaths(rootDir string, username string) ([]string, error) {
 			}
 
 			for _, file := range noteFiles {
-				relPath := username + "/" + category.Name() + "/" + file.Name()
-				filePaths = append(filePaths, relPath)
+				if !file.IsDir() {
+					relPath := username + "/" + category.Name() + "/" + file.Name()
+					filePaths = append(filePaths, relPath)
+				}
 			}
 		}
 	}
