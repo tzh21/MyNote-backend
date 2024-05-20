@@ -18,7 +18,8 @@ func NewFileHandler(db *gorm.DB) *FileHandler {
 	return &FileHandler{db: db}
 }
 
-const filesBasePath = "files"
+// 笔记文件存储的根目录
+const notesBasePath = "storage/note"
 
 func (h *FileHandler) HandleUpload(c *gin.Context) {
 	err := c.Request.ParseMultipartForm(10 << 20)
@@ -27,7 +28,7 @@ func (h *FileHandler) HandleUpload(c *gin.Context) {
 		return
 	}
 
-	path := filesBasePath + "/" + c.Param("path")
+	path := notesBasePath + "/" + c.Param("path")
 	file, _, err := c.Request.FormFile("file")
 
 	if err != nil {
@@ -60,19 +61,20 @@ func (h *FileHandler) HandleUpload(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
 }
 
-// rootDir 指的是用户目录
-func getAllFilePaths(rootDir string, username string) ([]string, error) {
-	var filePaths []string
+// 获取 dir 下所有笔记文件的相对路径，并在前面添加 username
+func getAllNoteRelPaths(username string) ([]string, error) {
+	var dir = notesBasePath + "/" + username
 
-	// 分类文件夹
-	categorys, err := os.ReadDir(rootDir)
+	var filePaths []string
+	// 用户文件夹下默认为笔记分类文件夹
+	categorys, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, category := range categorys {
 		if category.IsDir() {
-			noteFiles, err := os.ReadDir(rootDir + "/" + category.Name())
+			noteFiles, err := os.ReadDir(dir + "/" + category.Name())
 			if err != nil {
 				return nil, err
 			}
@@ -93,7 +95,7 @@ func getAllFilePaths(rootDir string, username string) ([]string, error) {
 func (h *FileHandler) HandleList(c *gin.Context) {
 	user := c.Param("user")
 
-	filePaths, err := getAllFilePaths(filesBasePath+"/"+user, user)
+	filePaths, err := getAllNoteRelPaths(user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -103,7 +105,7 @@ func (h *FileHandler) HandleList(c *gin.Context) {
 }
 
 func (h *FileHandler) HandleDownload(c *gin.Context) {
-	path := filesBasePath + "/" + c.Param("path")
+	path := notesBasePath + "/" + c.Param("path")
 
 	file, err := os.Open(path)
 	if err != nil {
