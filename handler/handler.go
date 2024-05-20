@@ -6,10 +6,24 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine, db *gorm.DB) {
-	// 用户相关路由
+	// 登录相关路由
 	userHandler := NewUserHandler(db)
 	router.POST("/signup", userHandler.HandleSignup)
 	router.POST("/login", userHandler.HandleLogin)
+
+	// 用户信息相关路由
+	profileHandler := NewProfileHandler(db)
+	// 个性签名
+	router.POST("/motto/:username", profileHandler.HandleUploadMotto)
+	router.GET("/motto/:username", profileHandler.HandleGetMotto)
+	// 昵称
+	router.POST("/nickname/:username", profileHandler.HandleUploadNickname)
+	router.GET("/nickname/:username", profileHandler.HandleGetNickname)
+	// 头像
+	router.POST("/avatar/:username", profileHandler.HandleUploadAvatar)
+	router.GET("/avatar/:username", profileHandler.HandleGetAvatar)
+	// 全部用户信息
+	router.GET("/profile/:username", profileHandler.HandleGetProfile)
 
 	// 文件相关路由
 	fileHandler := NewFileHandler(db)

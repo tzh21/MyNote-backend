@@ -34,6 +34,7 @@ func InitDB() *gorm.DB {
 	// 注意 需要将所有的 model 添加到 AutoMigrate 中
 	err = db.AutoMigrate(
 		&model.User{},
+		&model.Profile{},
 	)
 	if err != nil {
 		log.Fatalf("Error migrating database: %v", err)
