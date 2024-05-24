@@ -31,6 +31,14 @@ func (h *FileHandler) HandleUploadBlocks(c *gin.Context) {
 	HandleUpload(c, savePath)
 }
 
+func (h *FileHandler) HandleGetBlocks(c *gin.Context) {
+	username := c.Param("username")
+	filename := c.Param("filename")
+	path := utils.BlocksPath(username, filename)
+
+	c.File(path)
+}
+
 func (h *FileHandler) HandleUploadImage(c *gin.Context) {
 	username := c.Param("username")
 	filename := c.Param("filename")
