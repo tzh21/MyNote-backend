@@ -158,9 +158,8 @@ func (h *ProfileHandler) HandleGetAvatarPath(c *gin.Context) {
 func (h *ProfileHandler) HandleUploadAvatarFile(c *gin.Context) {
 	username := c.Param("username")
 	filename := c.Param("filename")
-	path := utils.AvatarPath(username, filename)
-
-	c.File(path)
+	savePath := utils.AvatarPath(username, filename)
+	utils.HandleUpload(c, savePath)
 }
 
 func (h *ProfileHandler) HandleGetAvatarFile(c *gin.Context) {
