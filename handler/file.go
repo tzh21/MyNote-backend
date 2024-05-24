@@ -31,7 +31,7 @@ func (h *FileHandler) HandleUploadBlocks(c *gin.Context) {
 	HandleUpload(c, savePath)
 }
 
-func (h *FileHandler) HandleUploadImages(c *gin.Context) {
+func (h *FileHandler) HandleUploadImage(c *gin.Context) {
 	username := c.Param("username")
 	filename := c.Param("filename")
 	savePath := utils.ImagesPath(username, filename)
@@ -65,6 +65,45 @@ func HandleUpload(c *gin.Context, savePath string) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
+}
+
+func (h *FileHandler) HandleGetImage(c *gin.Context) {
+	username := c.Param("username")
+	filename := c.Param("filename")
+	path := utils.ImagesPath(username, filename)
+
+	c.File(path)
+}
+
+func getNoteFileNames(username string) ([]string, error) {
+	var dir = utils.BlocksBasePath(username)
+
+	var fileNames []string
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range entries {
+		if !file.IsDir() {
+			fileNames = append(fileNames, file.Name())
+		}
+	}
+
+	return fileNames, nil
+}
+
+func (h *FileHandler) HandleGetList(c *gin.Context) {
+	username := c.Param("user")
+
+	fileNames, err := getNoteFileNames(username)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"files": fileNames})
 }
 
 // func HandleUpload(c *gin.Context, savePath string) {

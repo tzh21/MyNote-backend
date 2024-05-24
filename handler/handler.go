@@ -27,11 +27,12 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 
 	// 文件相关路由
 	fileHandler := NewFileHandler(db)
-	// router.GET("/list/:user", fileHandler.HandleList) // 返回用户所有文件路径组成的列表。每个元素的结构为 username/category/filename。客户端接收后根据表的内容逐个请求文件。
+	router.GET("/list/:user", fileHandler.HandleGetList) // 返回用户所有文件路径组成的列表。每个元素的结构为 username/category/filename。客户端接收后根据表的内容逐个请求文件。
 	// path 根目录为用户名，比如笔记的结构为 username/category/filename
 	// router.POST("/upload/:username/:filename", fileHandler.HandleUpload)
 	router.POST("/blocks/:username/:filename", fileHandler.HandleUploadBlocks)
-	router.POST("/image/:username/:filename", fileHandler.HandleUploadImages)
+	router.POST("/image/:username/:filename", fileHandler.HandleUploadImage)
+	router.GET("/image/:username/:filename", fileHandler.HandleGetImage)
 	// router.GET("/download/*path", fileHandler.HandleDownload)
 
 	// 仅管理员可以访问的 api
