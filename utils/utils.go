@@ -21,3 +21,11 @@ func ImagesBasePath(username string) string {
 func ImagesPath(username, filename string) string {
 	return fmt.Sprintf("%s/%s", ImagesBasePath(username), filename)
 }
+
+func AudioBasePath(username string) string {
+	return fmt.Sprintf("%s/%s/audio", notesBasePath, username)
+}
+
+func AudioPath(username, filename string) string {
+	return fmt.Sprintf("%s/%s", AudioBasePath(username), filename)
+}

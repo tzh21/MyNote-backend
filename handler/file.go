@@ -39,13 +39,6 @@ func (h *FileHandler) HandleGetBlocks(c *gin.Context) {
 	c.File(path)
 }
 
-func (h *FileHandler) HandleUploadImage(c *gin.Context) {
-	username := c.Param("username")
-	filename := c.Param("filename")
-	savePath := utils.ImagesPath(username, filename)
-	HandleUpload(c, savePath)
-}
-
 func HandleUpload(c *gin.Context, savePath string) {
 	// Ensure the directory exists
 	dir := filepath.Dir(savePath)
@@ -75,10 +68,32 @@ func HandleUpload(c *gin.Context, savePath string) {
 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
 }
 
+func (h *FileHandler) HandleUploadImage(c *gin.Context) {
+	username := c.Param("username")
+	filename := c.Param("filename")
+	savePath := utils.ImagesPath(username, filename)
+	HandleUpload(c, savePath)
+}
+
 func (h *FileHandler) HandleGetImage(c *gin.Context) {
 	username := c.Param("username")
 	filename := c.Param("filename")
 	path := utils.ImagesPath(username, filename)
+
+	c.File(path)
+}
+
+func (h *FileHandler) HandleUploadAudio(c *gin.Context) {
+	username := c.Param("username")
+	filename := c.Param("filename")
+	savePath := utils.AudioPath(username, filename)
+	HandleUpload(c, savePath)
+}
+
+func (h *FileHandler) HandleGetAudio(c *gin.Context) {
+	username := c.Param("username")
+	filename := c.Param("filename")
+	path := utils.AudioPath(username, filename)
 
 	c.File(path)
 }

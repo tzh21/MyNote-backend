@@ -34,6 +34,8 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/blocks/:username/:filename", fileHandler.HandleGetBlocks)
 	router.POST("/image/:username/:filename", fileHandler.HandleUploadImage)
 	router.GET("/image/:username/:filename", fileHandler.HandleGetImage)
+	router.POST("/audio/:username/:filename", fileHandler.HandleUploadAudio)
+	router.GET("/audio/:username/:filename", fileHandler.HandleGetAudio)
 	// router.GET("/download/*path", fileHandler.HandleDownload)
 
 	// 仅管理员可以访问的 api
