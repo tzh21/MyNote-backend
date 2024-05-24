@@ -31,7 +31,7 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	// path 根目录为用户名，比如笔记的结构为 username/category/filename
 	// router.POST("/upload/:username/:filename", fileHandler.HandleUpload)
 	router.POST("/blocks/:username/:filename", fileHandler.HandleUploadBlocks)
-	router.POST("/images/:username/:filename", fileHandler.HandleUploadImages)
+	router.POST("/image/:username/:filename", fileHandler.HandleUploadImages)
 	// router.GET("/download/*path", fileHandler.HandleDownload)
 
 	// 仅管理员可以访问的 api
