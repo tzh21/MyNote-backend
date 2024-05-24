@@ -20,23 +20,22 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	router.POST("/nickname/:username", profileHandler.HandleUploadNickname)
 	router.GET("/nickname/:username", profileHandler.HandleGetNickname)
 	// 头像
-	router.POST("/avatar/:username", profileHandler.HandleUploadAvatar)
-	router.GET("/avatar/:username", profileHandler.HandleGetAvatar)
+	router.POST("/avatar-name/:username", profileHandler.HandleUploadAvatarPath)
+	router.GET("/avatar-name/:username", profileHandler.HandleGetAvatarPath)
+	router.POST("/avatar/:username/:filename", profileHandler.HandleUploadAvatarFile)
+	router.GET("/avatar/:username/:filename", profileHandler.HandleGetAvatarFile)
 	// 全部用户信息
 	router.GET("/profile/:username", profileHandler.HandleGetProfile)
 
 	// 文件相关路由
 	fileHandler := NewFileHandler(db)
-	router.GET("/list/:user", fileHandler.HandleGetList) // 返回用户所有文件路径组成的列表。每个元素的结构为 username/category/filename。客户端接收后根据表的内容逐个请求文件。
-	// path 根目录为用户名，比如笔记的结构为 username/category/filename
-	// router.POST("/upload/:username/:filename", fileHandler.HandleUpload)
+	router.GET("/list/:user", fileHandler.HandleGetList)
 	router.POST("/blocks/:username/:filename", fileHandler.HandleUploadBlocks)
 	router.GET("/blocks/:username/:filename", fileHandler.HandleGetBlocks)
 	router.POST("/image/:username/:filename", fileHandler.HandleUploadImage)
 	router.GET("/image/:username/:filename", fileHandler.HandleGetImage)
 	router.POST("/audio/:username/:filename", fileHandler.HandleUploadAudio)
 	router.GET("/audio/:username/:filename", fileHandler.HandleGetAudio)
-	// router.GET("/download/*path", fileHandler.HandleDownload)
 
 	// 仅管理员可以访问的 api
 	adminGroup := router.Group("/admin", auth())

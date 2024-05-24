@@ -15,5 +15,5 @@ type Profile struct {
 	Username string `json:"username"`
 	Motto    string `json:"motto"`
 	Nickname string `json:"nickname"`
-	Avatar   []byte `json:"avatar"`
+	Avatar   string `json:"avatar"` // 头像文件名。图片需要另外请求
 }

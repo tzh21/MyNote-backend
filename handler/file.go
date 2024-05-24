@@ -2,10 +2,8 @@ package handler
 
 import (
 	"MyNote-backend/utils"
-	"io"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -28,7 +26,7 @@ func (h *FileHandler) HandleUploadBlocks(c *gin.Context) {
 	username := c.Param("username")
 	filename := c.Param("filename")
 	savePath := utils.BlocksPath(username, filename)
-	HandleUpload(c, savePath)
+	utils.HandleUpload(c, savePath)
 }
 
 func (h *FileHandler) HandleGetBlocks(c *gin.Context) {
@@ -39,40 +37,40 @@ func (h *FileHandler) HandleGetBlocks(c *gin.Context) {
 	c.File(path)
 }
 
-func HandleUpload(c *gin.Context, savePath string) {
-	// Ensure the directory exists
-	dir := filepath.Dir(savePath)
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err := os.MkdirAll(dir, os.ModePerm)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-	}
+// func HandleUpload(c *gin.Context, savePath string) {
+// 	// Ensure the directory exists
+// 	dir := filepath.Dir(savePath)
+// 	if _, err := os.Stat(dir); os.IsNotExist(err) {
+// 		err := os.MkdirAll(dir, os.ModePerm)
+// 		if err != nil {
+// 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 			return
+// 		}
+// 	}
 
-	// Create the file to save the uploaded content
-	newFile, err := os.Create(savePath)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	defer newFile.Close()
+// 	// Create the file to save the uploaded content
+// 	newFile, err := os.Create(savePath)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
+// 	defer newFile.Close()
 
-	// Copy the request body to the new file
-	_, err = io.Copy(newFile, c.Request.Body)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+// 	// Copy the request body to the new file
+// 	_, err = io.Copy(newFile, c.Request.Body)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
-}
+// 	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
+// }
 
 func (h *FileHandler) HandleUploadImage(c *gin.Context) {
 	username := c.Param("username")
 	filename := c.Param("filename")
 	savePath := utils.ImagesPath(username, filename)
-	HandleUpload(c, savePath)
+	utils.HandleUpload(c, savePath)
 }
 
 func (h *FileHandler) HandleGetImage(c *gin.Context) {
@@ -87,7 +85,7 @@ func (h *FileHandler) HandleUploadAudio(c *gin.Context) {
 	username := c.Param("username")
 	filename := c.Param("filename")
 	savePath := utils.AudioPath(username, filename)
-	HandleUpload(c, savePath)
+	utils.HandleUpload(c, savePath)
 }
 
 func (h *FileHandler) HandleGetAudio(c *gin.Context) {

@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # 重置数据库 mynote
-# 删除所有的表和数据，然后重新创建一个空的数据库
+# 删除 mynote 中所有的表和数据，然后重新创建一个空的数据库
 
 # MySQL 连接信息
 MYSQL_USER="root"
