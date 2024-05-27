@@ -186,3 +186,32 @@ func (h *ProfileHandler) HandleGetProfile(c *gin.Context) {
 		"avatar":   profile.Avatar,
 	})
 }
+
+func (h *ProfileHandler) HandleChangePassword(c *gin.Context) {
+	username := c.Param("username")
+
+	// 从请求中解析 password
+	type request struct {
+		Password string `json:"password"`
+	}
+	var req request
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 更新 password
+	var user model.User
+	if err := h.db.Where("username = ?", username).First(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
+		return
+	}
+
+	user.Password = req.Password
+	if err := h.db.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Password updated successfully"})
+}

@@ -26,6 +26,8 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/avatar/:username/:filename", profileHandler.HandleGetAvatarFile)
 	// 全部用户信息
 	router.GET("/profile/:username", profileHandler.HandleGetProfile)
+	// 修改密码
+	router.POST("/password/:username", profileHandler.HandleChangePassword)
 
 	// 文件相关路由
 	fileHandler := NewFileHandler(db)
