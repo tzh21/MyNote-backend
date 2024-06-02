@@ -6,6 +6,14 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine, db *gorm.DB) {
+	// 测试路由
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "pong"})
+	})
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "pong"})
+	})
+
 	// 登录相关路由
 	userHandler := NewUserHandler(db)
 	router.POST("/signup", userHandler.HandleSignup)
@@ -38,6 +46,7 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/image/:username/:filename", fileHandler.HandleGetImage)
 	router.POST("/audio/:username/:filename", fileHandler.HandleUploadAudio)
 	router.GET("/audio/:username/:filename", fileHandler.HandleGetAudio)
+	router.DELETE("/note/:username/:filename", fileHandler.HandleDeleteNote)
 
 	// 仅管理员可以访问的 api
 	adminGroup := router.Group("/admin", auth())
