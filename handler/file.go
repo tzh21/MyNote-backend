@@ -93,6 +93,19 @@ func (h *FileHandler) HandleGetList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"files": fileNames})
 }
 
+func (h *FileHandler) HandleDeleteAllNotes(c *gin.Context) {
+	username := c.Param("username")
+
+	dir := utils.BlocksBasePath(username)
+
+	if err := os.RemoveAll(dir); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "删除成功"})
+}
+
 // 删除 blocks 和依赖文件
 func (h *FileHandler) HandleDeleteNote(c *gin.Context) {
 	username := c.Param("username")

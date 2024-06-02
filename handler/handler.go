@@ -46,6 +46,7 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/image/:username/:filename", fileHandler.HandleGetImage)
 	router.POST("/audio/:username/:filename", fileHandler.HandleUploadAudio)
 	router.GET("/audio/:username/:filename", fileHandler.HandleGetAudio)
+	router.DELETE("/note/:username", fileHandler.HandleDeleteAllNotes)
 	router.DELETE("/note/:username/:filename", fileHandler.HandleDeleteNote)
 
 	// 仅管理员可以访问的 api
