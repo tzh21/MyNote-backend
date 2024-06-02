@@ -62,7 +62,7 @@ func (h *FileHandler) HandleGetAudio(c *gin.Context) {
 	c.File(path)
 }
 
-func getNoteFileNames(username string) ([]string, error) {
+func getNoteList(username string) ([]string, error) {
 	var dir = utils.BlocksBasePath(username)
 
 	var fileNames []string
@@ -83,10 +83,10 @@ func getNoteFileNames(username string) ([]string, error) {
 func (h *FileHandler) HandleGetList(c *gin.Context) {
 	username := c.Param("user")
 
-	fileNames, err := getNoteFileNames(username)
+	fileNames, err := getNoteList(username)
 
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if err != nil || fileNames == nil {
+		c.JSON(http.StatusOK, gin.H{"files": []string{}})
 		return
 	}
 
